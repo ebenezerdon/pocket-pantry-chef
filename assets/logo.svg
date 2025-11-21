@@ -1,0 +1,14 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pocket Pantry Chef logo">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF6A3D"/>
+      <stop offset="1" stop-color="#FF8A60"/>
+    </linearGradient>
+  </defs>
+  <rect x="12" y="28" width="104" height="72" rx="18" fill="url(#g1)"/>
+  <rect x="22" y="38" width="84" height="52" rx="12" fill="white" opacity="0.95"/>
+  <path d="M40 48h48" stroke="#0E9F6E" stroke-width="6" stroke-linecap="round"/>
+  <path d="M40 64h48" stroke="#0E9F6E" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="64" cy="100" r="6" fill="#0E9F6E"/>
+  <path d="M32 28c6-8 20-14 32-14s26 6 32 14" stroke="#FF6A3D" stroke-width="6" stroke-linecap="round"/>
+</svg>

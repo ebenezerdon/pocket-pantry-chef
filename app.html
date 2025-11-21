@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pocket Pantry Chef – App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Inter+Tight:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/main.css">
+  <script src="https://cdn.jsdelivr.net/npm/tailwindcss-cdn@3.4.10/tailwindcss.js"></script>
+  <style type="text/tailwindcss" data-teda="tailwind-apply">
+    @layer components {
+      .btn-primary { @apply inline-flex items-center justify-center rounded-full px-4 py-2 text-white text-sm font-medium shadow-lg focus:outline-none focus:ring-4 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed; background-color: #FF6A3D; }
+      .btn-primary:hover { background-color: #e65f37; box-shadow: 0 12px 24px rgba(255,106,61,0.25); }
+      .btn-secondary { @apply inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-medium border transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed; border-color: rgba(0,0,0,0.06); color: #0B3B2E; background-color: #ffffff; }
+      .btn-secondary:hover { background-color: #f9fafb; box-shadow: 0 8px 18px rgba(0,0,0,0.06); }
+      .badge { @apply inline-flex items-center rounded-full text-xs px-3 py-1; background-color: #E8F6EF; color: #0E9F6E; }
+      .glass { @apply bg-white/80 backdrop-blur-md ring-1 ring-black/5 rounded-2xl shadow-xl; }
+      .chip { @apply inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm bg-[#F2F5F3] ring-1 ring-black/5; }
+      .chip-remove { @apply text-[#2A5245] hover:text-[#FF6A3D] transition; }
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#FAFAF8] text-[#0B3B2E] antialiased" style="font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;">
+  <header class="sticky top-0 z-40 bg-[#FAFAF8]/80 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3">
+        <img src="assets/logo.svg" alt="Logo" class="h-9 w-9"/>
+        <span class="text-lg sm:text-xl font-black" style="font-family: 'Inter Tight', Inter, system-ui;">Pocket Pantry Chef</span>
+      </a>
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="btn-secondary">Back to site</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="py-6 md:py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        <!-- Nigerian dish generator -->
+        <section class="glass p-5 md:p-6 space-y-4 lg:sticky lg:top-20">
+          <div class="flex items-center justify-between">
+            <h2 class="text-2xl font-extrabold" style="font-family: 'Inter Tight'">Nigerian dish</h2>
+            <span class="badge">Generator</span>
+          </div>
+          <p class="text-sm text-[#2A5245]">Tap to generate a Nigerian meal idea with core ingredients.</p>
+          <button id="btn-gen-naija" class="btn-primary w-full">Generate Nigerian dish</button>
+          <div id="naija-card" class="hidden">
+            <div class="mt-2 font-bold text-lg" id="naija-name"></div>
+            <p class="text-sm text-[#2A5245]" id="naija-desc"></p>
+            <div class="mt-4">
+              <div class="text-sm font-semibold mb-2">Ingredients</div>
+              <ul id="naija-ings" class="list-disc pl-5 text-sm space-y-1"></ul>
+            </div>
+            <div class="mt-4 flex gap-2">
+              <button id="btn-add-ings" class="btn-secondary">Add all to shopping list</button>
+              <button id="btn-ai-variations" class="btn-secondary" disabled>Ask AI for variations</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- AI Chef Panel -->
+        <section class="glass p-5 md:p-6 space-y-4 relative">
+          <div class="flex items-center justify-between">
+            <h2 class="text-2xl font-extrabold" style="font-family: 'Inter Tight'">AI Chef</h2>
+            <span class="badge">Private</span>
+          </div>
+          <div id="ai-status" class="w-full">
+            <div id="ai-progress-wrap" class="rounded-lg overflow-hidden ring-1 ring-black/5">
+              <div id="ai-progress-bar" class="h-2 bg-[#0E9F6E] w-0 transition-all duration-300"></div>
+            </div>
+            <div class="flex items-center justify-between mt-2 text-xs text-[#2A5245]">
+              <span id="ai-progress-text">Loading model in your browser...</span>
+              <span id="ai-gpu" class="opacity-80"></span>
+            </div>
+            <div id="ai-error" class="hidden mt-2 text-sm text-[#B42318]"></div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+            <div>
+              <label for="country" class="text-xs font-medium">Country</label>
+              <select id="country" class="mt-1 w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0E9F6E]">
+                <option value="Nigeria">Nigeria</option>
+                <option>Ghana</option>
+                <option>Senegal</option>
+                <option>Kenya</option>
+                <option>Morocco</option>
+                <option>Ethiopia</option>
+                <option>South Africa</option>
+                <option>India</option>
+                <option>Italy</option>
+                <option>Mexico</option>
+              </select>
+            </div>
+            <div>
+              <label for="pref" class="text-xs font-medium">Preferences or style (optional)</label>
+              <input id="pref" type="text" placeholder="spicy, quick, vegetarian..." class="mt-1 w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0E9F6E]"/>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button id="btn-ai-from-pantry" class="btn-primary" disabled>Suggest recipe from my pantry</button>
+            <button id="btn-ai-native" class="btn-secondary" disabled>Native recipe for selected country</button>
+            <button id="btn-ai-stop" class="btn-secondary" disabled>Stop</button>
+          </div>
+          <div>
+            <div class="text-sm font-semibold mb-2">AI output</div>
+            <div id="ai-output" class="min-h-[180px] rounded-xl ring-1 ring-black/5 bg-white p-4 text-sm leading-6 markdown-body"></div>
+          </div>
+        </section>
+
+        <!-- Pantry and Shopping List -->
+        <section class="space-y-6">
+          <div class="glass p-5 md:p-6">
+            <div class="flex items-center justify-between">
+              <h2 class="text-2xl font-extrabold" style="font-family: 'Inter Tight'">Your pantry</h2>
+              <span class="badge" id="pantry-count">0 items</span>
+            </div>
+            <div class="mt-3 flex gap-2">
+              <input id="pantry-input" type="text" placeholder="Add items, comma separated (e.g. rice, tomatoes, pepper)" class="flex-1 rounded-xl border border-black/10 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0E9F6E]"/>
+              <button id="pantry-add" class="btn-primary">Add</button>
+            </div>
+            <div id="pantry-chips" class="mt-3 flex flex-wrap gap-2"></div>
+            <div class="mt-2 text-xs text-[#2A5245]">Tip: your pantry is saved on this device automatically.</div>
+          </div>
+
+          <div class="glass p-5 md:p-6">
+            <div class="flex items-center justify-between">
+              <h2 class="text-2xl font-extrabold" style="font-family: 'Inter Tight'">Shopping list</h2>
+              <div class="flex items-center gap-2">
+                <button id="shop-clear" class="btn-secondary">Clear</button>
+                <button id="shop-copy" class="btn-secondary">Copy</button>
+              </div>
+            </div>
+            <ul id="shop-list" class="mt-3 space-y-2"></ul>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="py-8 text-sm text-center text-[#2A5245]">
+    Built for home cooks. Fully private in your browser.
+  </footer>
+
+  <!-- Required script order -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="scripts/helpers.js"></script>
+  <script type="module" src="scripts/ai.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.9/dist/purify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="scripts/ui.js"></script>
+  <script src="scripts/main.js"></script>
+</body>
+</html>
