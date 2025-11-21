@@ -147,16 +147,12 @@
     const pantry = state.pantry.join(', ');
     const hint = window.AppData.countryHints[country] || '';
     const isNaija = country === 'Nigeria';
-    const allowedList = isNaija && Array.isArray(window.AppData.nigerianRecipes)
-      ? window.AppData.nigerianRecipes.map(r => r.name).join(', ')
-      : '';
     const system = 'You are a helpful culinary assistant that writes concise, practical recipes with exact ingredient lists and clear numbered steps.';
 
     let user = '';
     if (isNaija) {
-      user = `Create a Nigerian recipe that uses items from my pantry: ${pantry || 'none listed'}.
-Only choose a dish name from this allowed list: ${allowedList}.
-If none fit, pick the closest from the list and clearly mark any missing ingredients.
+      user = `Create an authentic Nigerian recipe that uses items from my pantry: ${pantry || 'none listed'}.
+Use your own knowledge of Nigerian cuisine to pick a suitable dish name. Clearly mark any missing ingredients.
 Format using Markdown with:
 - # Title
 - Short description
@@ -174,15 +170,16 @@ Keep it concise and practical. Preferences: ${pref || 'none'}.`;
   }
 
   function buildPromptNaijaVariations(dishName, ingredients){
-    const allowed = Array.isArray(window.AppData.nigerianRecipes) ? window.AppData.nigerianRecipes.map(r => r.name).join(', ') : '';
     const system = 'You are a friendly Nigerian home-cook assistant. Keep outputs concise and practical.';
-    const user = `Suggest two variations or sides for ${dishName}. Ingredients core: ${ingredients.join(', ')}. Use only real Nigerian dishes; options include: ${allowed}. Provide short bullet points.`;
+    const user = `Suggest two variations or complementary sides for ${dishName}. Ingredients core: ${ingredients.join(', ')}. Use only real Nigerian dishes. Provide short bullet points.`;
     return { system, user };
   }
+
   async function streamToOutput(system, user){
-    if (!state.aiReady) return;
-    setAIStreaming(true);
     const $out = $('#ai-output');
+    setAIStreaming(true);
+    $('#ai-error').addClass('hidden').text('');
+
     $out.empty();
     const caret = $('<span class="ai-caret"></span>');
     $out.append(caret);
@@ -206,7 +203,7 @@ Keep it concise and practical. Preferences: ${pref || 'none'}.`;
         $out.text(buffer);
         $out.append(caret);
       }
-      $out.scrollTop($out[0].scrollHeight);
+      $out.scrollTop($out[0]?.scrollHeight || 0);
     }
 
     try {
